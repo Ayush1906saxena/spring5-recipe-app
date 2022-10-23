@@ -1,6 +1,7 @@
 package guru.springframework.spring5recipeapp.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Recipe {
@@ -19,6 +20,8 @@ public class Recipe {
         Need to add difficulty ennumeration
      */
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<Ingredient> ingredients;
     @Lob
     private Byte[] image;
 
