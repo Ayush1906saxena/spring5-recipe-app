@@ -8,10 +8,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 class RecipeServiceImplTest {
     RecipeServiceImpl recipeService;
@@ -26,22 +28,33 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipes() {
+    public void getRecipeByIdTest() throws Exception {
         Recipe recipe = new Recipe();
-        HashSet<Recipe> recipesData = new HashSet();
-        recipesData.add(recipe);
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        /*
-            here we are kind of caching, we are just saying that when
-            recipeRepository.findAll() is called, we should just return
-            the hashset which already contains the value
-         */
-        when(recipeRepository.findAll()).thenReturn(recipesData);
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Recipe recipeReturned = recipeService.findById(1L);
+
+        assertNotNull("Null recipe returned", recipeReturned);
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipesTest() throws Exception {
+
+        Recipe recipe = new Recipe();
+        HashSet<Recipe> receipesData = new HashSet<>();
+        receipesData.add(recipe);
+
+        when(recipeService.getRecipes()).thenReturn(receipesData);
 
         Set<Recipe> recipes = recipeService.getRecipes();
-        assertEquals(recipes.size(), 1);
 
-        // we need to make sure that recipe repository was called only once.
+        assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
     }
 }
