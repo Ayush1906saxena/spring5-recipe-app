@@ -21,7 +21,7 @@ public class IngredientController {
     }
 
     @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients")
+    @RequestMapping("recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model){
         log.debug("Getting ingredient list for recipe id: "+recipeId);
         model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(recipeId)));
