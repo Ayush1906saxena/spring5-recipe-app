@@ -30,10 +30,13 @@ public class Recipe {
      */
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
+
     @Lob
     private Byte[] image;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
 
